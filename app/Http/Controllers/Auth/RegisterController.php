@@ -1,14 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
-    //
+    public function __construct() {
+        $this->middleware('auth');
+    }
+    
     public function index() {
         return view('auth.register');
     }
@@ -29,5 +33,8 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
         ]);
         // dd($request->name);
+        auth()->attempt($request->only('email', 'password'));
+
+        return redirect()->route('landingpage');
     }
 }
